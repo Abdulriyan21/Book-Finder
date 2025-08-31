@@ -1,0 +1,127 @@
+:root{
+  --bg-1:#071428; --bg-2:#0b2336;
+  --glass: rgba(255,255,255,0.04);
+  --glass-2: rgba(255,255,255,0.03);
+  --accent1: #4facfe;
+  --accent2: #00f2fe;
+  --muted: #9fb3c9;
+  --text: #e9f6ff;
+  --glass-border: rgba(127,219,255,0.06);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{height:100%}
+body{
+  min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(15,30,60,0.15), transparent 5%),
+              linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow:auto;
+}
+
+/* full-screen canvas sits behind content */
+#bg-canvas{position:fixed;inset:0;z-index:0;display:block}
+
+/* App layout */
+.container{position:relative;z-index:1;max-width:1150px;margin:40px auto;padding:24px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo-floating{
+  width:62px;height:62px;border-radius:16px;display:grid;place-items:center;font-size:30px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  box-shadow:0 8px 30px rgba(0,242,254,0.08),0 8px 40px rgba(79,172,254,0.06);
+  transform:translateZ(0);
+  animation: float 5s ease-in-out infinite, hue 6s linear infinite;
+}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+@keyframes hue{0%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(25deg)}100%{filter:hue-rotate(0deg)}}
+
+.site-title{
+  font-weight:700;font-size:1.4rem;letter-spacing:0.4px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 6px 20px rgba(10,30,60,0.5);
+}
+
+/* Cards & glass */
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;border:1px solid var(--glass-border);box-shadow:0 8px 30px rgba(3,10,30,0.6);backdrop-filter: blur(8px);padding:14px}
+.glass{transition:box-shadow .2s ease}
+.glass:hover{box-shadow:0 12px 50px rgba(2,10,30,0.7)}
+
+/* Search */
+.search-card{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.search-row{display:flex;gap:10px}
+.input{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);outline:none;min-height:44px}
+.input.small{max-width:140px}
+.input.main{flex:1}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+
+/* suggestions */
+.suggestions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.suggestion{padding:8px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.025), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;transition:transform .15s ease}
+.suggestion:hover{transform:translateY(-3px);color:var(--text)}
+
+/* Buttons */
+.btn{border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600;background:transparent;color:var(--text);outline:none}
+.btn.small{padding:6px 10px;font-size:0.9rem}
+.btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#00202a;box-shadow:0 10px 30px rgba(0,242,254,0.08);transition:transform .12s ease, box-shadow .12s ease}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 18px 50px rgba(79,172,254,0.12)}
+.btn.active{box-shadow:0 6px 30px rgba(79,172,254,0.08)}
+
+/* Results area */
+.results-area{margin-top:8px}
+.loading{display:flex;align-items:center;gap:12px;padding:18px;justify-content:center}
+.hidden{display:none}
+.spinner{width:28px;height:28px;border-radius:50%;border:4px solid rgba(255,255,255,0.06);border-top-color:var(--accent2);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px;border-radius:12px;border:1px dashed rgba(255,255,255,0.04);color:var(--muted)}
+.empty-emoji{font-size:48px}
+
+/* grid/list views */
+#results.view-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:760px){#results.view-grid{grid-template-columns:repeat(4,1fr)}}
+#results.view-list{display:flex;flex-direction:column;gap:12px}
+
+/* card style for book */
+.book-card{position:relative;overflow:hidden;border-radius:12px;padding:0;transform-style:preserve-3d;transition:transform .25s cubic-bezier(.18,.9,.32,1),box-shadow .2s ease,opacity .3s;cursor:pointer;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+.book-card .inner{display:flex;flex-direction:column;height:100%}
+.book-card .cover-wrap{position:relative;height:0;padding-top:133%;overflow:hidden;background:linear-gradient(180deg, rgba(10,20,40,0.4), rgba(5,8,18,0.4));display:block}
+.book-card img.cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;backface-visibility:hidden}
+
+/* shine effect on cover */
+.book-card .cover-wrap::after{content:'';position:absolute;left:-120%;top:0;width:60%;height:100%;background:linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.15), rgba(255,255,255,0.02));transform:skewX(-20deg);opacity:0.0;transition:all 0.9s ease}
+.book-card:hover .cover-wrap::after{left:120%;opacity:1;transition:all 0.9s cubic-bezier(.2,.8,.2,1)}
+
+/* Book meta */
+.meta{padding:12px;display:flex;flex-direction:column;gap:6px}
+.meta .title{font-weight:700;font-size:1rem;line-height:1.2}
+.meta .author{color:var(--muted);font-size:0.9rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.badge{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:6px 8px;border-radius:999px;font-size:0.78rem;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+
+/* card list layout */
+.view-list .book-card{display:flex;gap:12px;align-items:center;padding:12px}
+.view-list .book-card .cover-wrap{width:96px;padding-top:133%;flex:0 0 96px;border-radius:8px}
+.view-list .book-card img.cover{border-radius:8px}
+
+/* entry animation */
+.book-card.enter{opacity:0;transform:translateY(10px) scale(.99)}
+.book-card.enter.show{opacity:1;transform:translateY(0) scale(1)}
+
+/* tilt shadow & glow */
+.book-card:hover{box-shadow:0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(79,172,254,0.06)}
+
+/* Footer */
+.footer{text-align:center;color:var(--muted);margin-top:24px;padding:16px;font-size:0.9rem}
+
+/* responsive tweaks */
+@media(max-width:520px){
+  .search-row{flex-direction:column-reverse}
+  .filters{flex-direction:column}
+  #results.view-grid{grid-template-columns:repeat(2,1fr)}
+}
